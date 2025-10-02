@@ -15,12 +15,13 @@
         .then(data => {
             (async () => {
                 const encryptedIP = await encrypt(data.ip);
+                const params=new URLSearchParams(window.location.search).get('mapid');
+                const targetUrl = `${params}?key=${encryptedIP}`;
+                window.location.href = targetUrl;
+                console.log(targetUrl)
             })();
-            const params=new URLSearchParams(window.location.search).get('mapid');
-            const targetUrl = `${params}?key=${encryptedIP}`;
-            window.location.href = targetUrl;
-            console.log(targetUrl)
         })
     </script>
 </body>
 </html>
+
