@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>356地图守护</title>
+</head>
+<body>
+    <h1>正在加载地图中</h1>
+
+    <script>
+        encrypt=async(ip,pass)=>{let salt=crypto.getRandomValues(new Uint8Array(16));let iv=crypto.getRandomValues(new Uint8Array(12));let pk=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,["deriveKey"]);let key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:100000,hash:'SHA-256'},pk,{name:'AES-GCM',length:256},false,["encrypt"]);let ct=await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},key,new TextEncoder().encode(ip));let merged=new Uint8Array(salt.byteLength+iv.byteLength+ct.byteLength);merged.set(salt,0);merged.set(iv,salt.byteLength);merged.set(new Uint8Array(ct),salt.byteLength+iv.byteLength);return btoa(String.fromCharCode.apply(null,merged))};
+        fetch('https://api.ipgeolocation.io/getip')
+        .then(response => response.json())
+        .then(data => {
+            (async () => {
+                const encryptedIP = await encrypt(data.ip);
+            })();
+            const params=new URLSearchParams(window.location.search).get('mapid');
+            const targetUrl = `${params}?key=${encryptedIP}`;
+            window.location.href = targetUrl;
+            console.log(targetUrl)
+        })
+    </script>
+</body>
+</html>
