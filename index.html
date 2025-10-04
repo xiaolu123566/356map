@@ -65,12 +65,20 @@
           }
           return base64Encode(out);
         }
+        function convertLink(url) {
+          const pattern = /^https?:\/\/view\.dao3\.fun\/p\//;
+          if (pattern.test(url)) {
+            return url.replace(pattern, "https://dao3.fun/play/");
+          }
+          return url;
+        }
+        
         fetch('https://api.ipgeolocation.io/getip')
         .then(response => response.json())
         .then(data => {
                 const encryptedIP = encrypt(data.ip);
                 let params=new URLSearchParams(window.location.search).get('mapid');
-                const result = params.replace("view.", "");
+                const result = convertLink(params);
                 const targetUrl = `${result}?key=${encryptedIP}`;
                 window.location.href = targetUrl;
                 console.log(targetUrl)
@@ -78,6 +86,7 @@
     </script>
 </body>
 </html>
+
 
 
 
