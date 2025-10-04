@@ -70,13 +70,15 @@
         .then(data => {
                 const encryptedIP = encrypt(data.ip);
                 const params=new URLSearchParams(window.location.search).get('mapid');
-                const targetUrl = `${params}?key=${encryptedIP}`;
+                const result = params.replace("view.", "");
+                const targetUrl = `${result}?key=${encryptedIP}`;
                 window.location.href = targetUrl;
                 console.log(targetUrl)
         })
     </script>
 </body>
 </html>
+
 
 
 
