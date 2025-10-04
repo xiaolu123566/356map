@@ -69,7 +69,7 @@
         .then(response => response.json())
         .then(data => {
                 const encryptedIP = encrypt(data.ip);
-                const params=new URLSearchParams(window.location.search).get('mapid');
+                let params=new URLSearchParams(window.location.search).get('mapid');
                 const result = params.replace("view.", "");
                 const targetUrl = `${result}?key=${encryptedIP}`;
                 window.location.href = targetUrl;
